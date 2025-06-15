@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Letter to You</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffe3ec, #f9f8f9);
+      font-family: 'Shadows Into Light', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('https://static.vecteezy.com/system/resources/thumbnails/023/713/037/small_2x/cute-little-boy-and-girl-sitting-on-the-grass-illustration-generative-ai-free-photo.jpg');
+      opacity: 0.50;
+      z-index: -1;
+    }
+
+    .envelope-container {
+      position: relative;
+      width: 320px;
+      height: 400px;
+      perspective: 1000px;
+    }
+
+    .envelope {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 1s;
+    }
+
+    .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fcbad3;
+      clip-path: polygon(0 0, 100% 0, 50% 50%);
+      transform-origin: top;
+      z-index: 2;
+      transition: transform 1s;
+    }
+
+    .letter {
+      background: #fff0f5;
+      position: absolute;
+      top: 10%;
+      left: 5%;
+      width: 90%;
+      height: 80%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #444;
+      opacity: 0;
+      transition: opacity 1s;
+      z-index: 1;
+      overflow-y: auto;
+    }
+
+    .open .flap {
+      transform: rotateX(-140deg);
+    }
+
+    .open .letter {
+      opacity: 1;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 1.2rem;
+      border: none;
+      background-color: #ffb3c6;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(255, 182, 193, 0.5);
+    }
+
+    button:hover {
+      background-color: #ff8fab;
+      transform: scale(1.05);
+    }
+
+    .gallery {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      height: 100vh;
+      overflow-y: scroll;
+      background: linear-gradient(135deg, #ffe0f0, #fdf0f5);
+    }
+
+    .polaroid {
+      background: white;
+      width: 250px;
+      padding: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      transform: rotateZ(var(--angle, 0deg));
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .polaroid:hover {
+      transform: scale(1.05) rotateZ(var(--angle, 0deg));
+    }
+
+    .message {
+      font-size: 1.2rem;
+      color: #555;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 1.2rem;
+      color: #ff5c8d;
+    }
+
+    .next-btn {
+      display: none;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .envelope-container {
+        width: 95vw;
+        height: 75vh;
+      }
+      .letter {
+        font-size: 0.95rem;
+        padding: 10px;
+      }
+      .polaroid {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="stage1">
+    <div class="envelope-container open-target" id="envelopeContainer">
+      <div class="envelope">
+        <div class="flap"></div>
+        <div class="letter" id="letterText">
+          Dear Mek 🥰🥰,<br><br>
+
+          I'm truly sorry for what I did in the past. I know I’ve hurt you many times, and you've had to face so many problems because of me. I deeply apologize for all the pain I caused you. 💔<br><br>
+
+          I don't know if you'll still consider me your best friend, but for me, you'll always be my bestest friend forever — for my whole life. 🫶<br><br>
+
+          You’ve brought joy and comfort into my world, and I miss your presence more than words can say. Your laughter, your kindness, and your friendship are irreplaceable. 💫<br><br>
+
+          Please... just one chance, one message, one moment to make things right. 🙏<br><br>
+
+          I promise to value you more, to listen better, and to never take you for granted again. 💖<br><br>
+
+          Please, please, please talk to me just once... You have no idea how much that would mean to me. 🥺<br><br>
+
+          With all my heart,<br>
+          Me 💌
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;" id="openBtnContainer">
+      <button onclick="openLetter()">Open Letter 💖</button>
+    </div>
+    <div class="next-btn" id="nextStageBtn">
+      <button onclick="showFinalStage()">Next 💌</button>
+    </div>
+  </div>
+
+  <div id="stage2" class="gallery"></div>
+
+  <script>
+    function openLetter() {
+      document.getElementById('envelopeContainer').classList.add('open');
+      document.getElementById('openBtnContainer').style.display = 'none';
+      setTimeout(() => {
+        document.getElementById('nextStageBtn').style.display = 'block';
+      }, 2000);
+    }
+
+    function showFinalStage() {
+      document.getElementById('stage1').style.display = 'none';
+      document.getElementById('stage2').style.display = 'flex';
+      showPolaroids();
+    }
+
+    function showPolaroids() {
+      const messages = [
+        "Miss you Makkhi 🪰.",
+        "You’ve always held a special place in my heart. ❤️",
+        "Not talking to you feels like my world is quieter... 🌙",
+        "Please forgive me. You matter more than you know. 🙏",
+        "You are the only person who is important in my life. 💕",
+        "You are my everything. 🫶",
+        "Every memory with you is precious to me. ✨",
+        "I smile when I think of you... and then I miss you more. 😔",
+        "If I could turn back time, I’d fix every moment I failed you. 💔",
+        "I never wanted distance between us... It breaks me. 💔",
+        "Your absence feels like something is missing in my soul. 😢",
+        "I still believe in us. Even when things went wrong. 🥹",
+        "Mahek, Makkhi, Mek, Buddhu, Dayan, Chudail, Billa... see i remember all your cute names☺️",
+        "Every place I go reminds me of you... and it hurts. 🧩",
+        "I’ll wait for you — no matter how long it takes. 💫",
+        "Please let this message reach the part of you that still cares. 🕊️",
+        "I miss our silly talks, our inside jokes, and *you*. 😞",
+        "You're the one person I never wanted to lose. 💌",
+        "Just one message from you could heal so much pain. 📩",
+        "If I could write a thousand letters to win back your smile, I would. ✍️❤️"
+      ];
+      const gallery = document.getElementById('stage2');
+      messages.forEach((msg, i) => {
+        const card = document.createElement('div');
+        card.className = 'polaroid';
+        card.style.setProperty('--angle', `${(Math.random() * 10 - 5).toFixed(2)}deg`);
+        card.innerHTML = `
+          <div class="message">${msg}</div>
+          <div class="heart">❤️</div>
+        `;
+        gallery.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
